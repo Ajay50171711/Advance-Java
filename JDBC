@@ -1,0 +1,40 @@
+CRUD OPERATION
+=================
+
+Craete data
+-----------
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+package jdbc;
+
+
+public class Jdbc {
+    public static void main(String[] args) {
+        
+        try{
+            
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/td","root","raj123");
+            String q = "insert into students(name,age) values (?,?)";
+            
+            PreparedStatement ps = con.prepareStatement(q);
+            
+            ps.setString(1,"Adrash");
+            ps.setInt(2, 43);
+            ps.executeUpdate();
+            con.close();
+            System.out.println("data inserted");
+        
+        
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+    }
+    
+}
+
+:-  Before doing that makesure that database and table are craete in the mysql
+
