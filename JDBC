@@ -37,4 +37,37 @@ public class Jdbc {
 }
 
 :-  Before doing that makesure that database and table are craete in the mysql
+=============================================================================================================================================================================
+To read data
+--------------
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+package jdbc;
+
+public class Read {
+    public static void main(String[] args) {
+        try{
+            
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/td","root","raj123");
+        String q = "select * from students";
+        PreparedStatement ps = con.prepareStatement(q);
+        
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            String name = rs.getString("name");
+            int age = rs.getInt("age");
+            
+            System.out.println("Name: "+name+"\tAge: "+age);
+        }
+        con.close();
+        
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+       
+    }
+}
+===========================================================================================================================================
