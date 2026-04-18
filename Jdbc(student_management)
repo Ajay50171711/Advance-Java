@@ -1,0 +1,207 @@
+🎓 💻 Student Management System (JDBC Mini Project)
+🔧 Features we will build
+Add Student
+View All Students
+Update Student
+Delete Student
+🗄️ 1. Database Setup (MySQL)
+
+First create database and table:
+
+CREATE DATABASE td;
+USE td;
+
+CREATE TABLE students (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50),
+    age INT
+);
+📁 2. Project Structure
+jdbc/
+ ├── DBConnection.java
+ ├── StudentDAO.java
+ ├── Main.java
+🔌 3. DB Connection Class
+package jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DBConnection {
+
+    public static Connection getConnection() {
+        Connection con = null;
+
+        try {
+            con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/td",
+                "root",
+                "raj123"
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return con;
+    }
+}
+➕ 4. Insert Student
+package jdbc;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+public class StudentDAO {
+
+    public void addStudent(String name, int age) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String q = "INSERT INTO students(name, age) VALUES (?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(q);
+            ps.setString(1, name);
+            ps.setInt(2, age);
+
+            int row = ps.executeUpdate();
+
+            System.out.println(row > 0 ? "Student Added" : "Failed");
+
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+📋 5. View Students
+public void showStudents() {
+
+    try {
+        Connection con = DBConnection.getConnection();
+
+        String q = "SELECT * FROM students";
+
+        PreparedStatement ps = con.prepareStatement(q);
+
+        var rs = ps.executeQuery();
+
+        while (rs.next()) {
+            System.out.println(
+                rs.getInt("id") + " - " +
+                rs.getString("name") + " - " +
+                rs.getInt("age")
+            );
+        }
+
+        con.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+✏️ 6. Update Student
+public void updateStudent(int id, int age) {
+
+    try {
+        Connection con = DBConnection.getConnection();
+
+        String q = "UPDATE students SET age = ? WHERE id = ?";
+
+        PreparedStatement ps = con.prepareStatement(q);
+        ps.setInt(1, age);
+        ps.setInt(2, id);
+
+        int row = ps.executeUpdate();
+
+        System.out.println(row > 0 ? "Updated" : "Not Found");
+
+        con.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+❌ 7. Delete Student
+public void deleteStudent(int id) {
+
+    try {
+        Connection con = DBConnection.getConnection();
+
+        String q = "DELETE FROM students WHERE id = ?";
+
+        PreparedStatement ps = con.prepareStatement(q);
+        ps.setInt(1, id);
+
+        int row = ps.executeUpdate();
+
+        System.out.println(row > 0 ? "Deleted" : "Not Found");
+
+        con.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+▶️ 8. Main Class (Menu System)
+package jdbc;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        StudentDAO dao = new StudentDAO();
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+
+            System.out.println("\n--- STUDENT MENU ---");
+            System.out.println("1. Add Student");
+            System.out.println("2. View Students");
+            System.out.println("3. Update Student");
+            System.out.println("4. Delete Student");
+            System.out.println("5. Exit");
+
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    System.out.print("Enter name: ");
+                    String name = sc.next();
+                    System.out.print("Enter age: ");
+                    int age = sc.nextInt();
+                    dao.addStudent(name, age);
+                    break;
+
+                case 2:
+                    dao.showStudents();
+                    break;
+
+                case 3:
+                    System.out.print("Enter id: ");
+                    int id1 = sc.nextInt();
+                    System.out.print("Enter new age: ");
+                    int newAge = sc.nextInt();
+                    dao.updateStudent(id1, newAge);
+                    break;
+
+                case 4:
+                    System.out.print("Enter id: ");
+                    int id2 = sc.nextInt();
+                    dao.deleteStudent(id2);
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    return;
+
+                default:
+                    System.out.println("Invalid choice");
+            }
+        }
+    }
+}
