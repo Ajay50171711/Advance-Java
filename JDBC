@@ -70,5 +70,82 @@ public class Read {
        
     }
 }
-===========================================================================================================================================
+===================================================================================================================================
+update data
+---------
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+
+package jdbc;
+
+public class Update {
+    public static void main(String[] args) {
+        
+        try{
+        
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/td","root","raj123");
+        
+        String q = "update students set age = ? where name = ?";
+        
+        PreparedStatement ps = con.prepareStatement(q);
+        
+        ps.setInt(1,89);
+        ps.setString(2,"Adrash");
+        
+        int row = ps.executeUpdate();
+        
+        if(row>0){
+            System.out.println("Update successfully");
+        }else{
+            System.out.println("not updated");
+        }
+        
+        con.close();
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+================================================================================================================================
+delete data
+------------
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+package jdbc;
+
+public class Delete {
+    
+    public static void main(String[] args) {
+        
+    
+    
+    try{
+    
+    
+    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/td","root","raj123");
+    String q = "delete from students where name = ? ";
+    PreparedStatement ps = con.prepareStatement(q);
+    ps.setString(1, "Adrash");
+   int row = ps.executeUpdate();
+           
+           if(row>0){
+               System.out.println("deleted");
+           }else{
+               System.out.println("Error");
+           }
+    
+}
+        catch(Exception e){
+    
+    e.printStackTrace();
+        }
+}
+}
+
 
